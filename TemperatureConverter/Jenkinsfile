@@ -35,12 +35,14 @@ pipeline {
             steps {
                 sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
             }
-        }   
+        } 
+	    
         //Save bar file into BAR_FILES repository
+	    
 	    stage('Save BAR') {
             steps {
-		sh "git add '/var/lib/jenkins/workspace/IIB_PRIVATE/load/iib-assemblies/bars/tempconvert.bar'"
-		  }
+		git add '/var/lib/jenkins/workspace/IIB_PRIVATE/load/iib-assemblies/bars/tempconvert.bar'
+	    }
         }   
 	    
         // Either override and deploy the BAR (with or without broker file), or upload it to UCD so it can be deployed from there (one of the below steps should be uncommented)
