@@ -39,11 +39,8 @@ pipeline {
         //Save bar file into BAR_FILES repository
 	    stage('Save BAR') {
             steps {
-		git init
-		git add '/var/lib/jenkins/workspace/IIB_PRIVATE/load/iib-assemblies/bars/tempconvert.bar'
-		git commit 'Saving bar file'
-		git remote add origin 'https://github.com/Kumaraswamyc/BAR_FILES.git'
-		git push -u origin master
+		sh "add '/var/lib/jenkins/workspace/IIB_PRIVATE/load/iib-assemblies/bars/tempconvert.bar'"
+		
                 }
         }   
 	    
