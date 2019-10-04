@@ -42,7 +42,7 @@ pipeline {
         stage('Save BAR') {
             steps {
                 sh "git add '/var/lib/jenkins/workspace/SAVE_BAR/load/iib-assemblies/bars/tempconvert.bar'"
-		sh "git commit 'Saving bar file'"
+		sh "git commit -m 'Saving bar file'"
 		sh "git remote add origin 'https://github.com/Kumaraswamyc/BAR_FILES.git'"
 		sh "git push -u origin master"
             }
