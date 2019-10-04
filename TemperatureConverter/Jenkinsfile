@@ -31,11 +31,11 @@ pipeline {
        
        // Build BAR file from source code
        
-        stage('Build BAR') {
-            steps {
-                sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
-            }
-        }   
+       // stage('Build BAR') {
+       //     steps {
+       //         sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
+       //     }
+       // }   
 	    // Save Bar file in repository
 	    
 	          
@@ -45,7 +45,7 @@ pipeline {
    		sh "git config --global user.name 'Kumaraswamyc'"
                 sh "git add '/var/lib/jenkins/workspace/SAVE_BAR/tempconvert.bar'"
 		sh "git commit -m 'Saving bar file'"
-		sh "git remote add origin 'https://github.com/Kumaraswamyc/BAR_FILES.git'"
+		sh "git remote add origin 'https://github.com/Kumaraswamyc/temp-convert-github-iib.git'"
 		sh "git push -u origin master"
             }
         }  
