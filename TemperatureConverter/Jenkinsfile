@@ -40,9 +40,7 @@ pipeline {
         //Save bar file into BAR_FILES repository
 	    
 	    stage('Save BAR') {
-            steps {
-		git add '/var/lib/jenkins/workspace/IIB_PRIVATE/load/iib-assemblies/bars/tempconvert.bar'
-	    }
+            echo '123456789!!!'
         }   
 	    
         // Either override and deploy the BAR (with or without broker file), or upload it to UCD so it can be deployed from there (one of the below steps should be uncommented)
