@@ -43,6 +43,7 @@ pipeline {
             steps {
 		sh "git config --global user.email 'kumaraswamy.choppari@prolifics.com'"
    		sh "git config --global user.name 'Kumaraswamyc'"
+		sh "cp /var/lib/jenkins/workspace/SAVE_BAR/load/iib-assemblies/bars/tempconvert.bar /var/lib/jenkins/workspace/SAVE_BAR/."
                 sh "git add '/var/lib/jenkins/workspace/SAVE_BAR/tempconvert.bar'"
 		sh "git commit -m 'Saving bar file'"
 		sh "git remote add origin 'https://github.com/Kumaraswamyc/temp-convert-github-iib.git'"
