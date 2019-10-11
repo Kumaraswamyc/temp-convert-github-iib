@@ -17,58 +17,44 @@ pipeline {
         
        stage('Checkout Code'){
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/kumaraswamyc/temp-convert-github-iib.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Kumaraswamyc/temp-convert-github-iib.git']]])
             }
           
        }   
        
        stage('Checkout .brokerFile'){
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'brokerFiles-load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/kumaraswamyc/brokerFiles-iib.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'brokerFiles-load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Kumaraswamyc/brokerFiles-iib.git']]])
             }
           
        }  
        
        // Build BAR file from source code
        
-       // stage('Build BAR') {
-       //     steps {
-       //         sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
-       //     }
-       // }   
-	    // Save Bar file in repository
-	    
-	          
-        stage('Save BAR') {
+        stage('Build BAR') {
             steps {
-		sh "git config --global user.email 'kumaraswamy.choppari@prolifics.com'"
-   		sh "git config --global user.name 'Kumaraswamyc'"
-		sh "cp /var/lib/jenkins/workspace/SAVE_BAR/load/iib-assemblies/bars/tempconvert.bar /var/lib/jenkins/workspace/SAVE_BAR/."
-                sh "git add '/var/lib/jenkins/workspace/SAVE_BAR/tempconvert.bar'"
-		sh "git commit -m 'Saving bar file'"
-		sh "git remote add origin 'https://github.com/Kumaraswamyc/temp-convert-github-iib.git'"
-		sh "git push -u origin master"
+                sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
             }
-        }  
+        }   
         
         // Either override and deploy the BAR (with or without broker file), or upload it to UCD so it can be deployed from there (one of the below steps should be uncommented)
         
         stage('Override and Deploy BAR') {
          steps {
-                sh "/buildconductor/iib/run-automation.sh overrideAndDeploy tempconvert na na na PBCIS webuser1 passw0rd TemperatureConverter TemperatureConverter/overrides/development.properties ../brokerFiles-load/DEV/PBCNODE.broker"
+                sh "/buildconductor/iib/run-automation.sh overrideAndDeploy tempconvert na na na TEST iibadmin password  TemperatureConverter TemperatureConverter/overrides/development.properties ../brokerFiles-load/DEV/TEST.broker"
         
           }
         }       
     }
 	// Sending email notifications
-	post {
-        always {
-            echo 'I will always say Hello again!!!'
+	//post {
+        //always {
+          //  echo 'I will always say Hello again!!!'
             
-            emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+            //emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+              //  recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+                //subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
             
-        }
-    }
+        //}
+    //}
 }
