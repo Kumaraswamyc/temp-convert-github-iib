@@ -63,6 +63,5 @@ pipeline {
         }       
     }
 	// Sending email notifications
-
-    }
+	
 }
