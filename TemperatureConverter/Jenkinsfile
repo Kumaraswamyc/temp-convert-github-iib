@@ -17,25 +17,41 @@ pipeline {
         
        stage('Checkout Code'){
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/sitaramaprasad-e/temp-convert-github-iib.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/kumaraswamyc/temp-convert-github-iib.git']]])
             }
           
        }   
        
        stage('Checkout .brokerFile'){
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'brokerFiles-load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/sitaramaprasad-e/brokerFiles-iib.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'brokerFiles-load']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/kumaraswamyc/brokerFiles-iib.git']]])
             }
           
        }  
        
        // Build BAR file from source code
        
-        stage('Build BAR') {
+       // stage('Build BAR') {
+       //     steps {
+       //         sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
+       //     }
+       // }   
+	    // Save Bar file in repository
+	    
+	          
+        stage('Save BAR') {
             steps {
-                sh "/buildconductor/iib/run-automation.sh build tempconvert TemperatureConverter" 
+		 sh "git config --global user.email 'kumaraswamy.choppari@prolifics.com'"
+   		 sh "git config --global user.name 'Kumaraswamyc'"
+		
+		sh "git clone https://github.com/Kumaraswamyc/BAR_FILES.git"		
+		sh "cp /var/lib/jenkins/workspace/SAVE_BAR/load/iib-assemblies/bars/tempconvert.bar /var/lib/jenkins/workspace/SAVE_BAR/."
+        	sh "git add '/var/lib/jenkins/workspace/SAVE_BAR/tempconvert.bar'"
+		sh "git commit -m 'Saving bar file'"
+		sh "git remote add origin 'https://github.com/Kumaraswamyc/temp-convert-github-iib.git'"
+		sh "git push -u origin master"
             }
-        }   
+        }  
         
         // Either override and deploy the BAR (with or without broker file), or upload it to UCD so it can be deployed from there (one of the below steps should be uncommented)
         
@@ -47,14 +63,5 @@ pipeline {
         }       
     }
 	// Sending email notifications
-	post {
-        always {
-            echo 'I will always say Hello again!!!'
-            
-            emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
-            
-        }
-    }
+	
 }
